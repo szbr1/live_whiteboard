@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "../globals.css";
 import { ConvexClientProvider } from "@/providers/convex_client_provider";
+import OrgList from "./__components/Sidebar/OrgList";
+import Featured from "./__components/Sidebar/Featured";
 
 
 export const metadata: Metadata = {
@@ -12,8 +14,10 @@ export default function RootLayout({children,}: Readonly<{ children: React.React
   return (
     
     <html lang="en">
-      <body>
+      <body className="min-h-screen bg-black w-full flex">
       <ConvexClientProvider>
+        <OrgList />
+        <Featured />
         {children}
       </ConvexClientProvider>
       </body>
