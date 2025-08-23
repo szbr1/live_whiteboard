@@ -13,7 +13,7 @@ function Featured() {
     const searchParams = useSearchParams()
     const favorites = searchParams.get("favorites")
   return (
-    <div className='w-[200px] p-2  bg-green-400'>
+    <div className='w-[250px] p-2  bg-white hidden lg:block'>
        <div className='py-4'>
         logo
        </div>
@@ -21,27 +21,29 @@ function Featured() {
        <div
        className='flex flex-col gap-3 justify-start items-center '
        >
+        <Button variant={"outline"} className='w-[140px] p-0'>
+
         <OrganizationSwitcher
          hidePersonal
          appearance={{
-          elements: {
-            rootBox: {
-              display: 'flex',
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-              fontSize: "12px"
-            },
-            organizationSwitcherTrigger: {
-              padding: "6px",
-              width: "100%",
-              borderRadius: "4px",
-              border: "1px solid #000000",
-              background: "white"
+           elements: {
+             rootBox: {
+               display: 'flex',
+               justifyContent: "space-between",
+               alignItems: "center",
+               width: "100%",
+               fontSize: "12px"
+              },
+              organizationSwitcherTrigger: {
+                padding: "6px",
+                width: "100%",
+                borderRadius: "4px",
+               
               }
-              }
-             }}
-        />
+            }
+          }}
+          />
+          </Button>
         <div 
         className='flex flex-col gap-2'
         >
