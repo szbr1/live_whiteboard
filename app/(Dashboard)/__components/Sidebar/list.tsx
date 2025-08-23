@@ -40,7 +40,7 @@ function List({name, id, url}:OrganizationProps) {
          onClick={handleClick}
          height={100}
          width={100}
-         className={cn("rounded-xs size-8", isActive && "bg-white border-2 border-black ")}
+         className={cn("rounded-sm size-8", isActive && "bg-white border-2 border-black ")}
          />
 
     </div>
