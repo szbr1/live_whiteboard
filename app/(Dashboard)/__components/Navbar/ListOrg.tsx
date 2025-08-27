@@ -1,6 +1,6 @@
 import React from "react";
 import { useOrganizationList } from "@clerk/nextjs";
-import List from "./list";
+import List from "../Sidebar/list";
 
 function ListOrg() {
   const { userMemberships } = useOrganizationList({ userMemberships: true });
