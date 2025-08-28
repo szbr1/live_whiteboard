@@ -14,10 +14,11 @@ const poppins = Poppins({
 function OnUnSelected() {
 
   return (
-    <div className="h-full w-full flex justify-center items-center bg-white">
+    <div className="h-full w-full flex lg:pr-30
+     justify-center items-center bg-white">
       <div className="flex flex-col gap-5 justify-center items-center ">
         <div>
-          <Image src={"bag.svg"} height={200} width={200} alt="" />
+          <Image src={"bag.svg"} height={300} width={300} alt="" />
         </div>
 
         <div className="flex justify-center items-center flex-col">
@@ -29,8 +30,10 @@ function OnUnSelected() {
           </p>
 
               <Dialog>
-          <Button className="my-4 text-md  " asChild>
-                 <DialogTrigger> Create Organization</DialogTrigger>
+          <Button className="my-4 text-md   " asChild>
+                 <DialogTrigger className="cursor-pointer h-12" > 
+                  Create Organization
+                 </DialogTrigger>
           </Button>
 
                  <DialogContent className="absolute lg:top-12 top-20 lg:left-80 z-20 left-5">
