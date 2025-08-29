@@ -3,6 +3,7 @@ import "../globals.css";
 import { ConvexClientProvider } from "@/providers/convex_client_provider";
 import Sidebar from "./__components/Sidebar/Sidebar";
 import Navbar from "./__components/Navbar/Navbar";
+import { Toaster } from "react-hot-toast";
 
 
 
@@ -15,11 +16,15 @@ export default function RootLayout({children,}: Readonly<{ children: React.React
   return (
     
     <html lang="en">
-      <body className="min-h-screen bg-white w-full  overflow-hidden">
+      <body className="min-h-screen bg-white w-full  pr-12  overflow-hidden">
       <ConvexClientProvider>
         <Sidebar />
         <Navbar />
-        <div className="mt-16 ml-16  lg:ml-80 bg-gray-300">
+        <div className="mt-16 ml-16  lg:ml-80 ">
+        <Toaster
+          position="bottom-center"
+          reverseOrder={false}
+        />
         {children}
         </div>
       </ConvexClientProvider>
