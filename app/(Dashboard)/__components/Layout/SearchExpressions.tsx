@@ -1,12 +1,16 @@
 "use client";
 import SearchResults from "@/components/ui/SearchResults";
-import React from "react";
+import React, { useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useOrganization } from "@clerk/nextjs";
 import Image from "next/image";
-import { Plus, Star } from "lucide-react";
+import { FaStar } from "react-icons/fa6";
+import { MoreHorizontal, MoreHorizontalIcon, Plus, Star } from "lucide-react";
 import toast from "react-hot-toast";
+import Link from "next/link";
+import Actions from "@/components/ui/Actions";
+import { Id } from "@/convex/_generated/dataModel";
 
 interface SearchProps {
   orgId: string;
@@ -23,12 +27,20 @@ type boardProps  = {
   imageUrl: string,
   authorName:  string,
   name: string
+  _id: string
   
 }
 
 function SearchExpressions({ orgId, searchParams }: SearchProps) {
+  // react hooks
+  const [toggle , setToggle] = useState(false)
+  // clerk organization controlls
   const { organization } = useOrganization();
+  // convex functions
+  const favorite   = useMutation(api.board.favorite);
+  const unFavorite = useMutation(api.board.unFavorite)
   const createApi = useMutation(api.board.create);
+
   const data = useQuery(
     api.boards.get,
     organization ? { orgId: organization.id } : "skip"
@@ -66,14 +78,14 @@ function SearchExpressions({ orgId, searchParams }: SearchProps) {
   if (orgId && data?.length) {
     return(
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 p-3 md:grid-cols-3 sm:grid-cols-2">
+      <div className="grid relative grid-cols-1 lg:grid-cols-4 gap-4 p-3 md:grid-cols-3 sm:grid-cols-2">
         {/* // create new board card  */}
         <div
         onClick={()=>{
           createApi({id: organization.id, title: "Untitled"})
           toast.success("Board Created")
         }}
-         className="h-[22rem] group flex justify-center gap-2 items-center flex-col gap-3  w-full rounded-sm overflow-hidden relative border bg-blue-700  border-gray-200"
+         className="h-[22rem] group flex justify-center items-center flex-col gap-3  w-full rounded-sm overflow-hidden relative border bg-blue-700  border-gray-200"
         >
            <Plus className="text-white size-20"/>
           <p className="text-xs text-gray-200">Add New Board</p> 
@@ -86,11 +98,21 @@ function SearchExpressions({ orgId, searchParams }: SearchProps) {
           data.map((board: boardProps, index) => {
             return (
                <div
-                className="h-[22rem] group  w-full rounded-sm overflow-hidden relative border border-gray-200"
+                className="h-[22rem] group   w-full rounded-sm overflow-hidden relative border border-gray-200"
                 key={index + 1}>
                   {/* // overlay  */}
-                  <div className="absolute top-0 left-0 h-full w-full group-hover:bg-black/10   "></div>
-
+                  <Link href={`/board/${board._id}`} className="absolute top-0 left-0 h-full w-full group-hover:bg-black/30 cursor-auto   "></Link>
+                  <Actions
+                  id={board._id}
+                  side={"right"}
+                  sideOffset={3}
+                  title={board.title}
+                  
+                  >
+                     <button className="opacity-0 group-hover:opacity-100 absolute top-1 right-1">
+                        <MoreHorizontalIcon className="size-8 cursor-pointer  text-white/80 hover:text-white" />
+                     </button>
+                  </Actions>
 
                     <div className="w-full h-[86%]">
                     <Image 
@@ -103,7 +125,16 @@ function SearchExpressions({ orgId, searchParams }: SearchProps) {
                      </div>
                      <div className="px-2 flex justify-between w-full items-center ">
                       <p className="text-md py-2 font-semibold">{board.title}</p>
-                      <div className="hidden group-hover:block cursor-pointer"><Star className="size-5" /></div>
+                      <div
+                      onClick={(e)=>{
+                        e.stopPropagation()
+                        favorite({_id: board._id as Id<"boards">, orgId: organization.id}).then(()=> toast.success("favorited")).catch((e)=> unFavorite({_id:board._id as Id<"boards"> , orgId: organization.id}).then(()=> toast.success("Unfavorited")))
+                      } }
+                      className="hidden group-hover:block cursor-pointer z-40"
+                      >
+                       <Star className="size-5" />
+                        
+                        </div>
                      </div>
                   
                </div>

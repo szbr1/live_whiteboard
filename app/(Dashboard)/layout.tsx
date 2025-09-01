@@ -4,6 +4,7 @@ import { ConvexClientProvider } from "@/providers/convex_client_provider";
 import Sidebar from "./__components/Sidebar/Sidebar";
 import Navbar from "./__components/Navbar/Navbar";
 import { Toaster } from "react-hot-toast";
+import ActionInput from "@/components/ActionInput";
 
 
 
@@ -20,6 +21,7 @@ export default function RootLayout({children,}: Readonly<{ children: React.React
       <ConvexClientProvider>
         <Sidebar />
         <Navbar />
+        <ActionInput />
         <div className="mt-16 ml-16  lg:ml-80 ">
         <Toaster
           position="bottom-center"

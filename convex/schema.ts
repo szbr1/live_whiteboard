@@ -9,6 +9,7 @@ export default defineSchema({
     imageUrl: v.string(),
     orgId: v.string(),
     title: v.string(),
+    isFavorited: v.boolean()
   })
     // 🔹 Normal index
     // Allows filtering documents directly by `orgId`
@@ -20,4 +21,14 @@ export default defineSchema({
       searchField: "title",     // Field used for text search
       filterFields: ["orgId"],  // Optional filters (e.g., restrict search by orgId)
     }),
+
+   favorite: defineTable({
+    orgId: v.string(),
+    boardId: v.string(),
+    userId: v.string(),
+   })
+   .index("by_boardId", ["boardId"])
+   .index("by_user_org", ["userId" , "orgId"])
+   .index("by_user_board", ["userId", "boardId"])
+   .index("by_user_org_board", ["boardId", "orgId", "userId"])
 })

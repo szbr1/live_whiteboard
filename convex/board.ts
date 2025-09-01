@@ -1,4 +1,4 @@
-import {mutation} from "./_generated/server"
+import {mutation, query} from "./_generated/server"
 import {v} from "convex/values";
 
   
@@ -38,9 +38,100 @@ export const create = mutation({
             title: arg.title,
             imageUrl: randomImage,
             authorName: identity.name!,
-            name: "Untitled"
+            name: "Untitled",
+            isFavorited: false
         })
 
         return board;
     }
+})
+
+
+export const remove = mutation({
+  args: {_id: v.id("boards")},
+  handler: async (ctx, arg)=>{
+    const identity =await ctx.auth.getUserIdentity();
+
+    if(!identity) return;
+
+    if(!arg._id) throw Error("Id needed to delete")
+
+    await ctx.db.delete(arg._id)
+
+ }
+})
+
+export const rename = mutation({
+  args: {_id: v.id("boards"), title: v.string()},
+  handler: async (ctx , arg)=>{
+    const identity =await  ctx.auth.getUserIdentity();
+
+    if(!identity) return;
+
+    const board = await ctx.db.patch(arg._id , {title: arg.title})
+
+    return board
+  }
+})
+
+
+export const favorite = mutation({
+  args: {_id: v.id("boards"), orgId: v.string()},
+
+  handler : async (ctx, arg) =>{
+       const identity =await ctx.auth.getUserIdentity()
+       if(!identity) return;
+       if(!arg._id) return ;
+
+       const userId = identity.subject
+       
+       const isFavoriteExisting =  await ctx.db.query("favorite").withIndex("by_user_org_board", q => q
+                                                                                                  .eq("boardId", arg._id)
+                                                                                                  .eq("orgId", arg.orgId)
+                                                                                                  .eq("userId", userId)
+                                                                                                ).unique()
+      if(isFavoriteExisting){
+        throw new Error("Board is Already Favorited")
+      }                 
+      
+      await ctx.db.insert("favorite", {boardId: arg._id, orgId: arg.orgId, userId: userId} )
+      
+       
+  } 
+
+  
+
+
+})
+
+
+
+
+export const unFavorite = mutation({
+  args: {_id: v.id("boards"), orgId: v.string()},
+
+  handler : async (ctx, arg) =>{
+       const identity =await ctx.auth.getUserIdentity()
+       if(!identity) return;
+       if(!arg._id) return ;
+
+       const userId = identity.subject
+       
+       const isFavoriteExisting = await ctx.db.query("favorite").withIndex("by_user_org_board", q => q
+                                                                                                  .eq("boardId", arg._id)
+                                                                                                  .eq("orgId", arg.orgId)
+                                                                                                  .eq("userId", userId)
+                                                                                                ).unique()
+      if(!isFavoriteExisting){
+        throw new Error("Board is Not Favorited")
+      }                 
+      
+      await ctx.db.delete(isFavoriteExisting._id)
+      
+       
+  } 
+
+  
+
+
 })
