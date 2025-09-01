@@ -28,6 +28,7 @@ type boardProps  = {
   authorName:  string,
   name: string
   _id: string
+  isFavorite: boolean
   
 }
 
@@ -128,11 +129,17 @@ function SearchExpressions({ orgId, searchParams }: SearchProps) {
                       <div
                       onClick={(e)=>{
                         e.stopPropagation()
-                        favorite({_id: board._id as Id<"boards">, orgId: organization.id}).then(()=> toast.success("favorited")).catch((e)=> unFavorite({_id:board._id as Id<"boards"> , orgId: organization.id}).then(()=> toast.success("Unfavorited")))
-                      } }
+                        if(!board.isFavorite){
+                          favorite({_id: board._id as Id<"boards"> , orgId: organization.id})
+                        }else{
+                          unFavorite({_id: board._id as Id<"boards"> , orgId: organization.id})
+                        }
+
+                      }}
                       className="hidden group-hover:block cursor-pointer z-40"
                       >
-                       <Star className="size-5" />
+                        
+                       {!board.isFavorite ? <Star className="size-5" /> : <FaStar className="size-5 text-yellow-500" />}
                         
                         </div>
                      </div>

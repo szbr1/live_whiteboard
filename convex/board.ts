@@ -38,8 +38,7 @@ export const create = mutation({
             title: arg.title,
             imageUrl: randomImage,
             authorName: identity.name!,
-            name: "Untitled",
-            isFavorited: false
+            name: "Untitled"
         })
 
         return board;

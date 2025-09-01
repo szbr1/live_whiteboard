@@ -9,7 +9,6 @@ export default defineSchema({
     imageUrl: v.string(),
     orgId: v.string(),
     title: v.string(),
-    isFavorited: v.boolean()
   })
     // 🔹 Normal index
     // Allows filtering documents directly by `orgId`
